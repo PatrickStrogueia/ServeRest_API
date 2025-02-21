@@ -1,0 +1,38 @@
+name: Newman Run  # Nome do workflow
+
+on:
+  push:  # O workflow será acionado quando houver um push na branch 'main'
+    branches:
+      - main
+
+jobs:
+  newman:  
+    runs-on: ubuntu-latest  # Define o ambiente onde o job será executado (Ubuntu na versão mais recente)
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4  # Faz o checkout do repositório para que os arquivos fiquem acessíveis
+
+      - name: Criar diretório para artefatos de teste
+        run: mkdir -p testArtifacts  # Cria a pasta 'testArtifacts' (usa -p para evitar erro caso já exista)
+
+      - name: Instalar Node.js  
+        uses: actions/setup-node@v4  # Configura o ambiente Node.js
+
+      - name: Instalar o Newman  
+        run:
+          npm install -g newman  # Instala o Newman globalmente (ferramenta para executar coleções do Postman)
+
+      - name: Instalar o Reporter  
+        run:
+          npm install -g newman-reporter-htmlextra  # Instala um gerador de relatórios mais detalhados
+
+      - name: Executar testes Newman  
+        run: newman run GH_ServeRest.postman_collection.json -e ServeRest_test.postman_environment.json -r cli,htmlextra
+        # Executa a coleção de testes Postman, utilizando o ambiente especificado e gerando relatórios no terminal e em HTML
+
+      - name: Upload de relatórios  
+        uses: actions/upload-artifact@v3  # Faz upload dos relatórios gerados para os artefatos do workflow
+        with:
+          name: Reports  # Nome do artefato
+          path: newman  # Caminho onde os relatórios foram gerados
