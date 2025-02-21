@@ -1,0 +1,21 @@
+npm install -g newman
+
+npm install -g newman-reporter-html
+npm uninstall -g newman-reporter-html
+
+npm install -g newman-reporter-htmlextra
+
+-- Executa os testes pelo terminal
+newman run GH_ServeRest.postman_collection.json -e ServeRest_test.postman_environment.json -r cli
+
+-- Executa os testes gerando relatório
+newman run GH_ServeRest.postman_collection.json -e ServeRest_test.postman_environment.json -r cli,html
+newman run GH_ServeRest.postman_collection.json -e ServeRest_test.postman_environment.json -r cli,htmlextra
+newman run GH_ServeRest.postman_collection.json -e ServeRest_test.postman_environment.json -r htmlextra
+
+-- Alterar biblioteca tv4 para ajv na validação de schema
+const Ajv = require("ajv");
+const ajv = new Ajv({allErrors: true, vorbose: true});
+pm.test("Validar o schema ajv", function () {
+    pm.expect(ajv.validate(pm.response.json(), pm.globals.get("schema")), JSON.stringify(ajv.errors)).to.be.true;
+});
