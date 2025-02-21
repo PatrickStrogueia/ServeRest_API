@@ -32,7 +32,7 @@ jobs:
         # Executa a coleção de testes Postman, utilizando o ambiente especificado e gerando relatórios no terminal e em HTML
 
       - name: Upload de relatórios  
-        uses: actions/upload-artifact@v3  # Faz upload dos relatórios gerados para os artefatos do workflow
+        uses: actions/upload-artifact@v4  # Faz upload dos relatórios gerados para os artefatos do workflow
         with:
           name: Reports  # Nome do artefato
           path: newman  # Caminho onde os relatórios foram gerados
